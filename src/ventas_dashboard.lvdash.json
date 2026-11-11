@@ -1,0 +1,111 @@
+{
+  "datasets": [
+    {
+      "config": {
+        "dimensions": [
+          {
+            "expr": "source.*"
+          }
+        ],
+        "measures": [
+          {
+            "comment": "Represents the total number of rows in the dataset. Use this measure to count all",
+            "displayName": "Count",
+            "expr": "COUNT(*)",
+            "name": "count"
+          },
+          {
+            "displayName": "sum_ventas",
+            "expr": "SUM(ventas)",
+            "name": "sum_ventas"
+          }
+        ],
+        "source": "workspace.poll_cedeno.ventas_sql",
+        "version": "1.1"
+      },
+      "displayName": "ventas_sql",
+      "name": "2f8607b4"
+    }
+  ],
+  "pages": [
+    {
+      "displayName": "Untitled page",
+      "layout": [
+        {
+          "position": {
+            "height": 6,
+            "width": 6,
+            "x": 1,
+            "y": 0
+          },
+          "widget": {
+            "name": "75f6c0af",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "2f8607b4",
+                  "disaggregated": false,
+                  "fields": [
+                    {
+                      "expression": "`ciudad`",
+                      "name": "ciudad"
+                    },
+                    {
+                      "expression": "MEASURE(`sum_ventas`)",
+                      "name": "measure(sum_ventas)"
+                    }
+                  ]
+                }
+              }
+            ],
+            "spec": {
+              "data": {
+                "queryName": "main_query"
+              },
+              "encodings": {
+                "color": {
+                  "fieldName": "ciudad",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                },
+                "x": {
+                  "fieldName": "ciudad",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                },
+                "y": {
+                  "fieldName": "measure(sum_ventas)",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                }
+              },
+              "mark": {
+                "colors": [
+                  {
+                    "position": 2,
+                    "themeColorType": "visualizationColors"
+                  }
+                ]
+              },
+              "version": 3,
+              "widgetType": "bar"
+            }
+          }
+        }
+      ],
+      "layoutVersion": "GRID_V1",
+      "name": "c8b0348b",
+      "pageType": "PAGE_TYPE_CANVAS"
+    }
+  ],
+  "uiSettings": {
+    "applyModeEnabled": false,
+    "theme": {
+      "widgetHeaderAlignment": "ALIGNMENT_UNSPECIFIED"
+    }
+  }
+}
