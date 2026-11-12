@@ -1,0 +1,32 @@
+resources:
+  jobs:
+    pipeline_pedidos:
+      name: pipeline_pedidos
+
+      parameters:
+        - name: catalog
+          default: ${var.catalog}
+        - name: schema
+          default: ${var.schema}
+
+      tasks:
+        - task_key: generar_datos
+          notebook_task:
+            notebook_path: ../src/generar_datos.py
+
+        - task_key: cargar_pedidos
+          depends_on:
+            - task_key: generar_datos
+          notebook_task:
+            notebook_path: ../src/cargar_pedidos.py
+
+        - task_key: resumen_ventas
+          depends_on:
+            - task_key: cargar_pedidos
+          notebook_task:
+            notebook_path: ../src/resumen_ventas.sql
+
+      environments:
+        - environment_key: default
+          spec:
+            environment_version: "5"
