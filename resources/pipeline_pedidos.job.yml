@@ -26,6 +26,12 @@ resources:
           notebook_task:
             notebook_path: ../src/resumen_ventas.sql
 
+        - task_key: graficos_ventas
+          depends_on:
+            - task_key: resumen_ventas
+          notebook_task:
+            notebook_path: ../src/graficos_ventas.py
+
       environments:
         - environment_key: default
           spec:
