@@ -1,0 +1,19 @@
+name: Deploy bundle (dev)
+
+on:
+  push:
+    branches: [main]
+
+concurrency: deploy_dev
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      DATABRICKS_HOST: ${{ vars.DATABRICKS_HOST }}
+      DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: databricks/setup-cli@main
+      - run: databricks bundle validate --target dev
+      - run: databricks bundle deploy --target dev
