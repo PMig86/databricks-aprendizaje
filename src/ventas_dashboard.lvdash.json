@@ -25,6 +25,35 @@
       },
       "displayName": "ventas_sql",
       "name": "2f8607b4"
+    },
+    {
+      "displayName": "ventas_mensuales_ds",
+      "name": "16ca1b94",
+      "queryLines": [
+        "SELECT mes, ciudad, ventas, pedidos\r\n",
+        "FROM workspace.poll_cedeno.ventas_mensuales"
+      ]
+    },
+    {
+      "displayName": "ventas_producto_ds",
+      "name": "35560149",
+      "queryLines": [
+        "SELECT producto,\r\n",
+        "       SUM(cantidad * precio_unitario) AS ventas,\r\n",
+        "       SUM(cantidad) AS unidades\r\n",
+        "FROM workspace.poll_cedeno.pedidos\r\n",
+        "GROUP BY producto"
+      ]
+    },
+    {
+      "displayName": "kpis_ds",
+      "name": "fd1b2a42",
+      "queryLines": [
+        "SELECT SUM(cantidad * precio_unitario) AS ventas_totales,\r\n",
+        "       COUNT(*) AS pedidos,\r\n",
+        "       ROUND(AVG(cantidad * precio_unitario), 2) AS ticket_promedio\r\n",
+        "FROM workspace.poll_cedeno.pedidos"
+      ]
     }
   ],
   "pages": [
@@ -99,6 +128,267 @@
       ],
       "layoutVersion": "GRID_V1",
       "name": "c8b0348b",
+      "pageType": "PAGE_TYPE_CANVAS"
+    },
+    {
+      "displayName": "Resumen Ventas",
+      "layout": [
+        {
+          "position": {
+            "height": 6,
+            "width": 12,
+            "x": 0,
+            "y": 0
+          },
+          "widget": {
+            "name": "b1eccd6b",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "16ca1b94",
+                  "disaggregated": false,
+                  "fields": [
+                    {
+                      "expression": "`ciudad`",
+                      "name": "ciudad"
+                    },
+                    {
+                      "expression": "`mes`",
+                      "name": "mes"
+                    },
+                    {
+                      "expression": "SUM(`ventas`)",
+                      "name": "sum(ventas)"
+                    }
+                  ]
+                }
+              }
+            ],
+            "spec": {
+              "data": {
+                "queryName": "main_query"
+              },
+              "encodings": {
+                "color": {
+                  "fieldName": "ciudad",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                },
+                "x": {
+                  "fieldName": "mes",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                },
+                "y": {
+                  "fieldName": "sum(ventas)",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                }
+              },
+              "version": 3,
+              "widgetType": "line"
+            }
+          }
+        },
+        {
+          "position": {
+            "height": 6,
+            "width": 12,
+            "x": 0,
+            "y": 6
+          },
+          "widget": {
+            "name": "46a0dfcf",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "35560149",
+                  "disaggregated": false,
+                  "fields": [
+                    {
+                      "expression": "`producto`",
+                      "name": "producto"
+                    },
+                    {
+                      "expression": "SUM(`ventas`)",
+                      "name": "sum(ventas)"
+                    }
+                  ]
+                }
+              }
+            ],
+            "spec": {
+              "data": {
+                "queryName": "main_query"
+              },
+              "encodings": {
+                "color": {
+                  "fieldName": "producto",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                },
+                "x": {
+                  "fieldName": "producto",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                },
+                "y": {
+                  "fieldName": "sum(ventas)",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                }
+              },
+              "version": 3,
+              "widgetType": "bar"
+            }
+          }
+        },
+        {
+          "position": {
+            "height": 2,
+            "width": 4,
+            "x": 0,
+            "y": 12
+          },
+          "widget": {
+            "name": "cantidad-de-despedidos",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "fd1b2a42",
+                  "disaggregated": false,
+                  "fields": [
+                    {
+                      "expression": "SUM(`pedidos`)",
+                      "name": "sum(pedidos)"
+                    }
+                  ]
+                }
+              }
+            ],
+            "spec": {
+              "data": {
+                "queryName": "main_query"
+              },
+              "encodings": {
+                "value": {
+                  "fieldName": "sum(pedidos)"
+                }
+              },
+              "frame": {
+                "showTitle": true,
+                "title": {
+                  "fields": [],
+                  "value": "<span style=\"text-align:center;display:block\"><span style=\"font-size:18px;font-weight:700;text-decoration:underline\">Cantidad de pedidos</span></span>"
+                }
+              },
+              "version": 2,
+              "widgetType": "counter"
+            }
+          }
+        },
+        {
+          "position": {
+            "height": 2,
+            "width": 4,
+            "x": 4,
+            "y": 12
+          },
+          "widget": {
+            "name": "ticket-promedio",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "fd1b2a42",
+                  "disaggregated": false,
+                  "fields": [
+                    {
+                      "expression": "SUM(`ticket_promedio`)",
+                      "name": "sum(ticket_promedio)"
+                    }
+                  ]
+                }
+              }
+            ],
+            "spec": {
+              "data": {
+                "queryName": "main_query"
+              },
+              "encodings": {
+                "value": {
+                  "fieldName": "sum(ticket_promedio)"
+                }
+              },
+              "frame": {
+                "showTitle": true,
+                "title": {
+                  "fields": [],
+                  "value": "<span style=\"text-align:center;display:block;\"><span style=\"font-size: 18px;font-weight: 700;text-decoration: underline;\">Ticket Promedio</span></span>"
+                }
+              },
+              "version": 2,
+              "widgetType": "counter"
+            }
+          }
+        },
+        {
+          "position": {
+            "height": 2,
+            "width": 4,
+            "x": 8,
+            "y": 12
+          },
+          "widget": {
+            "name": "ventas-totales",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "fd1b2a42",
+                  "disaggregated": false,
+                  "fields": [
+                    {
+                      "expression": "SUM(`ventas_totales`)",
+                      "name": "sum(ventas_totales)"
+                    }
+                  ]
+                }
+              }
+            ],
+            "spec": {
+              "data": {
+                "queryName": "main_query"
+              },
+              "encodings": {
+                "value": {
+                  "fieldName": "sum(ventas_totales)"
+                }
+              },
+              "frame": {
+                "showTitle": true,
+                "title": {
+                  "fields": [],
+                  "value": "<span style=\"text-align:center;display:block;\"><span style=\"font-size: 18px;font-weight: 700;text-decoration: underline;\">Ventas totales</span></span>"
+                }
+              },
+              "version": 2,
+              "widgetType": "counter"
+            }
+          }
+        }
+      ],
+      "layoutVersion": "GRID_V1",
+      "name": "7db8c78e",
       "pageType": "PAGE_TYPE_CANVAS"
     }
   ],
